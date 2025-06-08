@@ -1,0 +1,11 @@
+name: devops-frontend-project
+services:
+  node:
+    tty: true
+    container_name: devops-frontend-project-node
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    env_file: ./.env
+    ports:
+      - "3000:3000"

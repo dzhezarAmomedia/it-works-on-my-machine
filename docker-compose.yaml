@@ -1,0 +1,3 @@
+include:
+  - backend/docker/docker-compose.yaml
+  - frontend/docker/docker-compose.yaml
