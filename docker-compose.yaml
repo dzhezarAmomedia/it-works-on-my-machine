@@ -1,3 +1,4 @@
 include:
   - backend/docker/docker-compose.yaml
   - frontend/docker/docker-compose.yaml
+  - monitoring/docker/docker-compose.yaml

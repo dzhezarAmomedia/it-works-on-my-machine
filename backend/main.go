@@ -12,8 +12,9 @@ import (
 	"syscall"
 	"time"
 
-    "github.com/gin-contrib/cors"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/penglongli/gin-metrics/ginmetrics"
 )
 
 func main() {
@@ -30,6 +31,9 @@ func main() {
 	log.Println("Starting server...")
 	router := gin.New()
 	router.Use(cors.Default())
+	m := ginmetrics.GetMonitor()
+	m.SetMetricPath("/metrics")
+	m.Use(router)
 	router.GET("/fibonacci", fibonacciHandler)
 	router.POST("/video", videoPostHandler)
 	router.GET("/videos", videosGetHandler)
