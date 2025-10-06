@@ -1,0 +1,16 @@
+apiVersion: 1
+datasources:
+  - name: Loki
+    type: loki
+    access: proxy
+    uid: lokidatasource
+    url: http://devops-monitoring-project-loki:3100
+    basicAuth: false
+    isDefault: false
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    uid: promdatasource
+    isDefault: true
+    url: http://devops-monitoring-project-prometheus:9090
+    basicAuth: false

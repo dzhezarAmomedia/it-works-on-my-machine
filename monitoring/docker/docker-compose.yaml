@@ -1,0 +1,71 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: devops-monitoring-project-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
+    networks:
+      - app-network
+
+  alertmanager:
+    container_name: devops-monitoring-project-alertmanager
+    image: prom/alertmanager
+    ports:
+      - "9094:9094"
+    networks:
+      - app-network
+
+  loki:
+    image: grafana/loki
+    container_name: devops-monitoring-project-loki
+    ports:
+      - "3100:3100"
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana-oss
+    container_name: devops-monitoring-project-grafana
+    env_file: ./grafana/.env
+    ports:
+      - '3001:3000'
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/dashboards/:/etc/grafana/dashboards/
+    networks:
+      - app-network
+
+  grafana-alloy:
+    image: grafana/alloy
+    container_name: devops-monitoring-project-grafana-alloy
+    restart: unless-stopped
+    ports:
+      - '12345:12345'
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    volumes:
+      - ./alloy/:/etc/alloy/
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - app-network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    container_name: devops-monitoring-project-cadvisor
+    ports:
+      - "8081:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - app-network
+
+volumes:
+    grafana-storage: { }
